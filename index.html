@@ -1,18 +1,35 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>DareLy — Daily Sparks for Spouses</title>
     <meta name="description" content="Simple, intimate flashcards for spouses. Daily micro-dares, flirty sparks, and deep conversation prompts." />
-    <meta name="theme-color" content="#0c0a09" />
+    <meta name="theme-color" content="#f4f0e8" />
+    
+    <!-- PWA Settings -->
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="./icon-192.svg" />
+    <link rel="apple-touch-icon" href="./icon-192.svg" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="DareLy" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-stone-950 text-stone-100 overflow-x-hidden antialiased font-['Plus_Jakarta_Sans',sans-serif]">
+  <body class="bg-[#f4f0e8] text-stone-900 overflow-x-hidden antialiased font-['Inter',sans-serif] selection:bg-stone-900 selection:text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+    </script>
   </body>
 </html>
-

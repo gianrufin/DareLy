@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="128" fill="#1c1917" />
+  <!-- Minimalist Flame & Heart Intertwined Spark -->
+  <path d="M256 110 C 230 180, 160 210, 160 290 C 160 360, 205 400, 256 400 C 307 400, 352 360, 352 290 C 352 210, 282 180, 256 110 Z" fill="#fbf9f5" />
+  <path d="M256 240 C 242 280, 210 300, 210 335 C 210 365, 230 380, 256 380 C 282 380, 302 365, 302 335 C 302 300, 270 280, 256 240 Z" fill="#1c1917" />
+</svg>

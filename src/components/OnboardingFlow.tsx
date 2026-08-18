@@ -23,7 +23,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
     initialPrefs?.primaryDesire || 'Romantic Touch & Closeness'
   );
   const [notificationTime, setNotificationTime] = useState(
-    initialPrefs?.notificationTime || 'Evening (8:00 PM)'
+    initialPrefs?.notificationTime || 'Evening'
   );
 
   const handleNext = () => {
@@ -55,8 +55,8 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
     } catch {}
 
     const completedPrefs: UserPreferences = {
-      userName: userName.trim() || 'You',
-      spouseName: spouseName.trim() || 'Spouse',
+      userName: userName.trim() || 'Alex',
+      spouseName: spouseName.trim() || 'Sam',
       relationshipDuration,
       primaryDesire,
       notificationTime,
@@ -72,7 +72,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
   return (
     <div
       id="onboarding-container"
-      className="w-full max-w-[390px] min-h-[720px] bg-[#fbf9f5] rounded-[44px] shadow-2xl p-6 sm:p-7 flex flex-col justify-between relative border border-stone-200/60 overflow-hidden select-none"
+      className="w-full max-w-[390px] min-h-[720px] bg-[#fbf9f5] rounded-[44px] shadow-2xl p-6 sm:p-7 flex flex-col justify-between relative border border-stone-200/60 overflow-hidden select-none font-sans text-stone-900"
     >
       {/* Top Header & Progress */}
       <div className="space-y-4 pt-1">
@@ -87,7 +87,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
                 <ArrowLeft className="w-4 h-4 stroke-[2]" />
               </button>
             ) : (
-              <div className="w-7 h-7 rounded-full bg-stone-900 text-white flex items-center justify-center">
+              <div className="w-7 h-7 rounded-full bg-stone-900 text-white flex items-center justify-center shadow-sm">
                 <Heart className="w-3.5 h-3.5 stroke-[2]" />
               </div>
             )}
@@ -118,10 +118,10 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
           {step === 1 && (
             <motion.div
               key="step-1"
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 18 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.25 }}
+              exit={{ opacity: 0, x: -18 }}
+              transition={{ duration: 0.22 }}
               className="space-y-5"
             >
               {/* Preview Hero Card */}
@@ -137,34 +137,34 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
                 </div>
               </div>
 
-              <div className="space-y-2 text-center">
-                <h2 className="text-2xl font-black tracking-tight text-stone-900">
+              <div className="space-y-1.5 text-center">
+                <h2 className="text-2xl font-bold tracking-tight text-stone-900">
                   Micro-Moments for Married Life
                 </h2>
-                <p className="text-xs text-stone-500 leading-relaxed max-w-[280px] mx-auto">
-                  3 simple, high-impact sparks dealt every day at midnight to keep your marriage playful, affectionate, and close.
+                <p className="text-xs font-normal text-stone-500 leading-relaxed max-w-[280px] mx-auto">
+                  3 simple, intentional sparks dealt every day at midnight to keep your marriage playful, affectionate, and close.
                 </p>
               </div>
 
-              {/* 3 Value Pillars */}
+              {/* Value Pillars */}
               <div className="space-y-2 pt-1">
-                <div className="flex items-center gap-3 p-2.5 rounded-2xl bg-white border border-stone-200/50 shadow-sm">
+                <div className="flex items-center gap-3 p-3 rounded-2xl bg-white border border-stone-200/60 shadow-sm">
                   <div className="w-8 h-8 rounded-xl bg-stone-100 flex items-center justify-center text-stone-900 shrink-0">
                     <Sparkles className="w-4 h-4 stroke-[1.8]" />
                   </div>
                   <div className="text-left">
-                    <p className="text-xs font-bold text-stone-900">3 Sparks a Day</p>
-                    <p className="text-[10px] text-stone-400">Playful, Romantic Touch & Deep Conversation</p>
+                    <p className="text-xs font-bold text-stone-900 tracking-tight">3 Sparks a Day</p>
+                    <p className="text-[10px] font-normal text-stone-400">Playful, Romantic Touch & Deep Conversation</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 p-2.5 rounded-2xl bg-white border border-stone-200/50 shadow-sm">
+                <div className="flex items-center gap-3 p-3 rounded-2xl bg-white border border-stone-200/60 shadow-sm">
                   <div className="w-8 h-8 rounded-xl bg-stone-100 flex items-center justify-center text-stone-900 shrink-0">
                     <Flame className="w-4 h-4 stroke-[1.8]" />
                   </div>
                   <div className="text-left">
-                    <p className="text-xs font-bold text-stone-900">Daily Streak Rhythm</p>
-                    <p className="text-[10px] text-stone-400">Build small, consistent connection habits</p>
+                    <p className="text-xs font-bold text-stone-900 tracking-tight">Daily Streak Rhythm</p>
+                    <p className="text-[10px] font-normal text-stone-400">Build small, consistent connection habits</p>
                   </div>
                 </div>
               </div>
@@ -175,17 +175,17 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
           {step === 2 && (
             <motion.div
               key="step-2"
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 18 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.25 }}
+              exit={{ opacity: 0, x: -18 }}
+              transition={{ duration: 0.22 }}
               className="space-y-4"
             >
               <div className="space-y-1">
-                <h2 className="text-xl font-black text-stone-900 tracking-tight">
+                <h2 className="text-xl font-bold text-stone-900 tracking-tight">
                   Who is this ritual for?
                 </h2>
-                <p className="text-xs text-stone-400">
+                <p className="text-xs font-normal text-stone-400">
                   We customize your daily spark cards and prompts with your names.
                 </p>
               </div>
@@ -200,7 +200,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
                     type="text"
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
-                    placeholder="e.g. Gian"
+                    placeholder="e.g. Alex"
                     className="w-full p-3.5 rounded-2xl bg-white border border-stone-200 text-xs text-stone-900 font-medium focus:outline-none focus:border-stone-900 shadow-sm transition-colors"
                   />
                 </div>
@@ -214,7 +214,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
                     type="text"
                     value={spouseName}
                     onChange={(e) => setSpouseName(e.target.value)}
-                    placeholder="e.g. Sarah"
+                    placeholder="e.g. Sam"
                     className="w-full p-3.5 rounded-2xl bg-white border border-stone-200 text-xs text-stone-900 font-medium focus:outline-none focus:border-stone-900 shadow-sm transition-colors"
                   />
                 </div>
@@ -252,17 +252,17 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
           {step === 3 && (
             <motion.div
               key="step-3"
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 18 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.25 }}
+              exit={{ opacity: 0, x: -18 }}
+              transition={{ duration: 0.22 }}
               className="space-y-4"
             >
               <div className="space-y-1">
-                <h2 className="text-xl font-black text-stone-900 tracking-tight">
+                <h2 className="text-xl font-bold text-stone-900 tracking-tight">
                   What spark do you crave most?
                 </h2>
-                <p className="text-xs text-stone-400">
+                <p className="text-xs font-normal text-stone-400">
                   Select your primary intention to calibrate your daily card balance.
                 </p>
               </div>
@@ -299,9 +299,9 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
                         : 'bg-white text-stone-800 border-stone-200 hover:bg-stone-50'
                     }`}
                   >
-                    <p className="text-xs font-bold">{item.title}</p>
+                    <p className="text-xs font-bold tracking-tight">{item.title}</p>
                     <p
-                      className={`text-[10px] mt-0.5 ${
+                      className={`text-[10px] font-normal mt-0.5 ${
                         primaryDesire === item.title ? 'text-stone-300' : 'text-stone-400'
                       }`}
                     >
@@ -343,42 +343,42 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
           {step === 4 && (
             <motion.div
               key="step-4"
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 18 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.25 }}
+              exit={{ opacity: 0, x: -18 }}
+              transition={{ duration: 0.22 }}
               className="space-y-5 text-center"
             >
               <div className="w-16 h-16 rounded-full bg-stone-900 text-white mx-auto flex items-center justify-center shadow-lg">
-                <Sparkles className="w-8 h-8 stroke-[1.8]" />
+                <Sparkles className="w-7 h-7 stroke-[1.8]" />
               </div>
 
               <div className="space-y-1">
-                <h2 className="text-2xl font-black text-stone-900 tracking-tight">
+                <h2 className="text-2xl font-bold text-stone-900 tracking-tight">
                   You're Ready
                 </h2>
-                <p className="text-xs text-stone-500 max-w-[260px] mx-auto leading-relaxed">
+                <p className="text-xs font-normal text-stone-500 max-w-[260px] mx-auto leading-relaxed">
                   Your personalized deck for{' '}
-                  <span className="font-bold text-stone-900">{userName || 'You'}</span> &{' '}
-                  <span className="font-bold text-stone-900">{spouseName || 'Spouse'}</span> is
+                  <span className="font-bold text-stone-900">{userName || 'Alex'}</span> &{' '}
+                  <span className="font-bold text-stone-900">{spouseName || 'Sam'}</span> is
                   dealt for today.
                 </p>
               </div>
 
               <div className="p-4 rounded-3xl bg-white border border-stone-200/80 shadow-sm space-y-2.5 text-left text-xs">
                 <div className="flex items-center justify-between pb-2 border-b border-stone-100">
-                  <span className="text-stone-400 text-[11px]">Today's Ritual</span>
+                  <span className="text-stone-400 font-medium text-[11px]">Today's Ritual</span>
                   <span className="font-bold text-stone-900">3 Fresh Sparks</span>
                 </div>
-                <div className="flex items-center gap-2 text-stone-700">
+                <div className="flex items-center gap-2 text-stone-700 font-medium">
                   <Check className="w-3.5 h-3.5 text-stone-900 stroke-[2.5]" />
                   <span>1 Playful sensory dare</span>
                 </div>
-                <div className="flex items-center gap-2 text-stone-700">
+                <div className="flex items-center gap-2 text-stone-700 font-medium">
                   <Check className="w-3.5 h-3.5 text-stone-900 stroke-[2.5]" />
                   <span>1 Romantic touch moment</span>
                 </div>
-                <div className="flex items-center gap-2 text-stone-700">
+                <div className="flex items-center gap-2 text-stone-700 font-medium">
                   <Check className="w-3.5 h-3.5 text-stone-900 stroke-[2.5]" />
                   <span>1 Deep bedtime conversation</span>
                 </div>
@@ -393,7 +393,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
         {step < 4 ? (
           <button
             onClick={handleNext}
-            className="w-full py-4 rounded-full bg-stone-900 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg hover:bg-stone-800 active:scale-95 transition-all"
+            className="w-full py-4 rounded-full bg-stone-900 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-md hover:bg-stone-800 active:scale-95 transition-all"
           >
             <span>Continue</span>
             <ArrowRight className="w-4 h-4 stroke-[2]" />
@@ -401,7 +401,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
         ) : (
           <button
             onClick={handleFinish}
-            className="w-full py-4 rounded-full bg-stone-900 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg hover:bg-stone-800 active:scale-95 transition-all"
+            className="w-full py-4 rounded-full bg-stone-900 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-md hover:bg-stone-800 active:scale-95 transition-all"
           >
             <Sparkles className="w-4 h-4 stroke-[2]" />
             <span>Deal Today's 3 Sparks</span>

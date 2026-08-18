@@ -322,7 +322,7 @@ export default function App() {
             {/* Header Row */}
             <div className="flex items-center justify-between pt-1">
               <div>
-                <h1 className="text-2xl font-black text-stone-900 tracking-tight">
+                <h1 className="text-2xl font-bold text-stone-900 tracking-tight">
                   DareLy
                 </h1>
                 <p className="text-[11px] text-stone-400 font-medium -mt-0.5">

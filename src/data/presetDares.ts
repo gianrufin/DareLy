@@ -1,9 +1,9 @@
 import { Dare } from '../types';
 
-import danceImg from '../assets/images/spouse_dance_card_1787046224895.jpg';
-import whisperImg from '../assets/images/spouse_whisper_card_1787046238910.jpg';
-import cozyImg from '../assets/images/spouse_cozy_card_1787046252145.jpg';
-import nightImg from '../assets/images/spouse_night_card_1787046263978.jpg';
+import danceImg from '../assets/images/abstract_dance_blur_1787059943370.jpg';
+import whisperImg from '../assets/images/abstract_whisper_blur_1787059957674.jpg';
+import cozyImg from '../assets/images/abstract_cozy_blur_1787059977834.jpg';
+import nightImg from '../assets/images/abstract_night_blur_1787059994404.jpg';
 
 export const SPOUSE_DARES: Dare[] = [
   // --- ROMANCE & TOUCH ---

@@ -5,7 +5,7 @@ import confetti from 'canvas-confetti';
 import { UserPreferences } from '../types';
 import { playSoundEffect } from '../utils/audio';
 import { triggerHaptic } from '../utils/haptics';
-import danceImg from '../assets/images/spouse_dance_card_1787046224895.jpg';
+import danceImg from '../assets/images/abstract_dance_blur_1787059943370.jpg';
 
 interface OnboardingFlowProps {
   onComplete: (prefs: UserPreferences) => void;
@@ -72,7 +72,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete, init
   return (
     <div
       id="onboarding-container"
-      className="w-full max-w-[390px] min-h-[720px] bg-[#fbf9f5] rounded-[44px] shadow-2xl p-6 sm:p-7 flex flex-col justify-between relative border border-stone-200/60 overflow-hidden select-none font-sans text-stone-900"
+      className="w-full h-full min-h-[100dvh] sm:min-h-[720px] sm:max-w-[400px] bg-[#fbf9f5] rounded-none sm:rounded-[44px] shadow-none sm:shadow-2xl p-5 sm:p-7 flex flex-col justify-between relative border-0 sm:border sm:border-stone-200/60 overflow-hidden select-none font-sans text-stone-900"
     >
       {/* Top Header & Progress */}
       <div className="space-y-4 pt-1">

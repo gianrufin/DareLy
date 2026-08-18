@@ -300,7 +300,7 @@ export default function App() {
   };
 
   return (
-    <main className="min-h-[100dvh] w-full bg-[#f4f0e8] flex items-center justify-center p-3 sm:p-6 font-sans text-stone-900 selection:bg-stone-900 selection:text-white">
+    <main className="min-h-[100dvh] h-[100dvh] w-full bg-[#f4f0e8] flex items-center justify-center p-0 sm:p-6 font-sans text-stone-900 selection:bg-stone-900 selection:text-white overflow-hidden">
       {!preferences.isOnboarded ? (
         /* --- FIRST TIME LAUNCH: ONBOARDING FLOW --- */
         <OnboardingFlow
@@ -315,7 +315,7 @@ export default function App() {
         /* --- MAIN APP INTERFACE (Matches uploaded reference video) --- */
         <div
           id="darely-app-container"
-          className="w-full max-w-[390px] min-h-[720px] bg-[#fbf9f5] rounded-[44px] shadow-2xl p-6 flex flex-col justify-between relative border border-stone-200/60 overflow-hidden"
+          className="w-full h-full sm:h-auto sm:max-w-[400px] sm:min-h-[740px] bg-[#fbf9f5] rounded-none sm:rounded-[44px] shadow-none sm:shadow-2xl p-5 sm:p-6 flex flex-col justify-between relative border-0 sm:border sm:border-stone-200/60 overflow-hidden"
         >
           {/* Top Section */}
           <div className="space-y-4">

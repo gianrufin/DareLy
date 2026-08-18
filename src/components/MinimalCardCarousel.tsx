@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Play, Check, RotateCcw, Volume2, VolumeX, Loader2, Heart, Clock } from 'lucide-react';
+import { Check, RotateCcw, Volume2, VolumeX, Loader2, Heart, Clock } from 'lucide-react';
 import { Dare } from '../types';
 import { playSoundEffect, playPcmAudio, stopCurrentAudio } from '../utils/audio';
 import { triggerHaptic } from '../utils/haptics';
@@ -249,7 +249,7 @@ export const MinimalCardCarousel: React.FC<MinimalCardCarouselProps> = ({
                     </p>
                   </div>
 
-                  {/* Circular Black Action Button */}
+                  {/* Circular Black Done / Check Action Button */}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -257,17 +257,17 @@ export const MinimalCardCarousel: React.FC<MinimalCardCarouselProps> = ({
                       triggerHaptic('success');
                       onComplete(currentDare);
                     }}
-                    className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 shadow-md transition-transform active:scale-90 ${
+                    className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 shadow-md transition-all active:scale-90 ${
                       isThisDareCompletedToday
-                        ? 'bg-stone-800 text-stone-300'
+                        ? 'bg-stone-900 text-emerald-400 ring-2 ring-emerald-500/30'
                         : 'bg-stone-900 text-white hover:bg-stone-800'
                     }`}
                     title={isThisDareCompletedToday ? 'Completed' : 'Mark spark completed'}
                   >
                     {isThisDareCompletedToday ? (
-                      <Check className="w-5 h-5 stroke-[2.5]" />
+                      <Check className="w-5 h-5 sm:w-5 sm:h-5 stroke-[3] text-emerald-400" />
                     ) : (
-                      <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-white ml-0.5" />
+                      <Check className="w-5 h-5 sm:w-5 sm:h-5 stroke-[2.2] text-white" />
                     )}
                   </button>
                 </div>

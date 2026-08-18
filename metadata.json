@@ -1,0 +1,6 @@
+{
+  "name": "DareLy",
+  "description": "Intimate, simplified flashcard app delivering daily micro-dares and conversation sparks crafted exclusively for spouses and married couples.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

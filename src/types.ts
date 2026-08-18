@@ -27,6 +27,11 @@ export interface CompletedDareMemory {
 }
 
 export interface UserPreferences {
-  voice: 'Kore' | 'Puck' | 'Fenrir' | 'Zephyr' | 'Charon';
+  userName: string;
   spouseName: string;
+  relationshipDuration: string;
+  primaryDesire: string;
+  notificationTime: string;
+  voice: 'Kore' | 'Puck' | 'Fenrir' | 'Zephyr' | 'Charon';
+  isOnboarded: boolean;
 }

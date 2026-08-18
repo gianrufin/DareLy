@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { X, Flame, Sparkles, Bookmark, Heart, Trash2, Calendar, Loader2, User } from 'lucide-react';
-import { CompletedDareMemory, Dare } from '../types';
+import { X, Flame, Sparkles, Bookmark, Heart, Trash2, Calendar, Loader2, User, RotateCcw } from 'lucide-react';
+import { CompletedDareMemory, Dare, UserPreferences } from '../types';
 import { playSoundEffect } from '../utils/audio';
 import { triggerHaptic } from '../utils/haptics';
 
@@ -17,7 +17,6 @@ export const JournalModal: React.FC<JournalModalProps> = ({
   onClose,
   memories,
   onDeleteMemory,
-  streakCount,
 }) => {
   if (!isOpen) return null;
 
@@ -32,7 +31,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
             </div>
             <div>
               <h3 className="font-bold text-sm text-stone-900 leading-none">Sparks Journal</h3>
-              <p className="text-[11px] text-stone-400 mt-0.5">{memories.length} saved moments</p>
+              <p className="text-[11px] text-stone-400 mt-0.5">{memories.length} moments logged</p>
             </div>
           </div>
           <button
@@ -105,6 +104,39 @@ interface AiGeneratorModalProps {
   onGenerated: (dare: Dare) => void;
 }
 
+const STATIC_FALLBACK_SPARKS: Record<string, { title: string; desc: string; convo: string; minutes: number }> = {
+  romance: {
+    title: 'Candlelight Slow Sip',
+    desc: 'Light a single candle in the kitchen or bedroom. Sip a drink together in quiet candlelight without any other lights or phones on.',
+    convo: 'What was your favorite moment between us this month?',
+    minutes: 4,
+  },
+  playful: {
+    title: 'The 60s Stare & Giggle',
+    desc: 'Try to keep a completely straight face while making playful facial expressions at each other. First one to break a smile loses and grants a wish.',
+    convo: 'What is the funniest inside joke we share?',
+    minutes: 2,
+  },
+  deep: {
+    title: 'Vulnerability Confession',
+    desc: 'Share one fear or quiet hope you have been holding onto recently. Give each other full undivided presence with no advice.',
+    convo: 'When do you feel most understood by me?',
+    minutes: 5,
+  },
+  cozy: {
+    title: 'Blanket Fort Tea Break',
+    desc: 'Wrap yourselves together under a heavy blanket on the couch and spend 5 minutes doing nothing but resting together.',
+    convo: 'What is your idea of a perfect relaxing evening with me?',
+    minutes: 5,
+  },
+  flirty: {
+    title: 'The Secret Whisper',
+    desc: 'Lean into your partner and softly whisper your favorite thing about their body or personality today.',
+    convo: 'What is something I do that you secretly find irresistible?',
+    minutes: 2,
+  },
+};
+
 export const AiGeneratorModal: React.FC<AiGeneratorModalProps> = ({
   isOpen,
   onClose,
@@ -119,43 +151,71 @@ export const AiGeneratorModal: React.FC<AiGeneratorModalProps> = ({
   const handleGenerate = async () => {
     setLoading(true);
     triggerHaptic('medium');
+
+    const partner = spouseName || 'Spouse';
+
     try {
       const res = await fetch('/api/dares/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          relationship: spouseName || 'Spouse',
+          relationship: partner,
           vibe: `${vibe} and intimate`,
           intensity: 'light',
           customTone: 'minimalist, romantic, warm and playful for married partners',
         }),
       });
-      const data = await res.json();
-      setLoading(false);
 
-      if (data.success && data.dare) {
-        const newDare: Dare = {
-          id: `ai-spark-${Date.now()}`,
-          title: data.dare.title,
-          subtitle: data.dare.subtitle || 'AI Spark',
-          description: data.dare.description,
-          whyItWorks: data.dare.whyItWorks || 'Creates shared intimacy and appreciation.',
-          estimatedMinutes: data.dare.estimatedMinutes || 3,
-          conversationStarter: data.dare.conversationStarter || 'What did you love most about today?',
-          spiceLevel: data.dare.spiceLevel || 2,
-          category: 'Custom',
-          imageUrl: 'https://picsum.photos/seed/romantic/600/800',
-          isAiGenerated: true,
-        };
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.dare) {
+          const newDare: Dare = {
+            id: `ai-spark-${Date.now()}`,
+            title: data.dare.title,
+            subtitle: data.dare.subtitle || 'Bespoke Spark',
+            description: data.dare.description,
+            whyItWorks: data.dare.whyItWorks || 'Creates shared intimacy and appreciation.',
+            estimatedMinutes: data.dare.estimatedMinutes || 3,
+            conversationStarter: data.dare.conversationStarter || 'What did you love most about today?',
+            spiceLevel: data.dare.spiceLevel || 2,
+            category: 'Custom',
+            imageUrl: 'https://picsum.photos/seed/romantic/600/800',
+            isAiGenerated: true,
+          };
 
-        playSoundEffect('spark');
-        triggerHaptic('success');
-        onGenerated(newDare);
-        onClose();
+          setLoading(false);
+          playSoundEffect('spark');
+          triggerHaptic('success');
+          onGenerated(newDare);
+          onClose();
+          return;
+        }
       }
     } catch {
-      setLoading(false);
+      // Fallback
     }
+
+    // Static fallback for GitHub Pages hosting
+    const fallback = STATIC_FALLBACK_SPARKS[vibe] || STATIC_FALLBACK_SPARKS.romance;
+    const newDare: Dare = {
+      id: `ai-spark-${Date.now()}`,
+      title: fallback.title,
+      subtitle: `${vibe.charAt(0).toUpperCase() + vibe.slice(1)} Spark`,
+      description: fallback.desc,
+      whyItWorks: 'Spontaneous micro-rituals deepen marital intimacy and restore daily presence.',
+      estimatedMinutes: fallback.minutes,
+      conversationStarter: fallback.convo,
+      spiceLevel: 2,
+      category: 'Custom',
+      imageUrl: 'https://picsum.photos/seed/romantic/600/800',
+      isAiGenerated: true,
+    };
+
+    setLoading(false);
+    playSoundEffect('spark');
+    triggerHaptic('success');
+    onGenerated(newDare);
+    onClose();
   };
 
   return (
@@ -167,8 +227,8 @@ export const AiGeneratorModal: React.FC<AiGeneratorModalProps> = ({
               <Sparkles className="w-4 h-4 stroke-[1.8]" />
             </div>
             <div>
-              <h3 className="font-bold text-sm text-stone-900 leading-none">Generate AI Spark</h3>
-              <p className="text-[11px] text-stone-400 mt-0.5">Bespoke dare for you & {spouseName || 'Spouse'}</p>
+              <h3 className="font-bold text-sm text-stone-900 leading-none">Generate Bespoke Spark</h3>
+              <p className="text-[11px] text-stone-400 mt-0.5">Crafted for you & {spouseName || 'Spouse'}</p>
             </div>
           </div>
           <button
@@ -227,8 +287,9 @@ interface StreakProfileModalProps {
   onClose: () => void;
   streakCount: number;
   bestStreak: number;
-  spouseName: string;
-  onUpdateSpouseName: (name: string) => void;
+  preferences: UserPreferences;
+  onUpdatePreferences: (prefs: Partial<UserPreferences>) => void;
+  onResetApp: () => void;
 }
 
 export const StreakProfileModal: React.FC<StreakProfileModalProps> = ({
@@ -236,14 +297,15 @@ export const StreakProfileModal: React.FC<StreakProfileModalProps> = ({
   onClose,
   streakCount,
   bestStreak,
-  spouseName,
-  onUpdateSpouseName,
+  preferences,
+  onUpdatePreferences,
+  onResetApp,
 }) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-sm bg-white rounded-[32px] p-6 shadow-2xl border border-stone-100 space-y-4">
+      <div className="w-full max-w-sm bg-white rounded-[32px] p-6 shadow-2xl border border-stone-100 space-y-4 max-h-[85vh] overflow-y-auto no-scrollbar">
         <div className="flex items-center justify-between pb-2 border-b border-stone-100">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-800">
@@ -281,19 +343,40 @@ export const StreakProfileModal: React.FC<StreakProfileModalProps> = ({
           </div>
         </div>
 
-        {/* Spouse Name Input */}
-        <div className="space-y-1.5">
+        {/* User's Name Input */}
+        <div className="space-y-1">
           <label className="text-xs font-semibold text-stone-600 flex items-center gap-1.5">
             <User className="w-3.5 h-3.5 stroke-[1.8]" />
+            <span>Your Name</span>
+          </label>
+          <input
+            type="text"
+            value={preferences.userName}
+            onChange={(e) => onUpdatePreferences({ userName: e.target.value })}
+            placeholder="Your name"
+            className="w-full p-3 rounded-2xl bg-stone-50 border border-stone-200 text-xs text-stone-900 focus:outline-none focus:border-stone-900 transition-colors font-medium"
+          />
+        </div>
+
+        {/* Spouse Name Input */}
+        <div className="space-y-1">
+          <label className="text-xs font-semibold text-stone-600 flex items-center gap-1.5">
+            <Heart className="w-3.5 h-3.5 stroke-[1.8]" />
             <span>Spouse's Name</span>
           </label>
           <input
             type="text"
-            value={spouseName}
-            onChange={(e) => onUpdateSpouseName(e.target.value)}
-            placeholder="e.g. Sarah, Alex, My Love"
-            className="w-full p-3 rounded-2xl bg-stone-50 border border-stone-200 text-xs text-stone-900 focus:outline-none focus:border-stone-900 transition-colors"
+            value={preferences.spouseName}
+            onChange={(e) => onUpdatePreferences({ spouseName: e.target.value })}
+            placeholder="Spouse's name"
+            className="w-full p-3 rounded-2xl bg-stone-50 border border-stone-200 text-xs text-stone-900 focus:outline-none focus:border-stone-900 transition-colors font-medium"
           />
+        </div>
+
+        {/* Intimacy Focus */}
+        <div className="p-3 rounded-2xl bg-stone-50 border border-stone-100 space-y-1">
+          <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Primary Intention</p>
+          <p className="text-xs font-semibold text-stone-800">{preferences.primaryDesire || 'Romantic Touch & Closeness'}</p>
         </div>
 
         <button
@@ -301,10 +384,26 @@ export const StreakProfileModal: React.FC<StreakProfileModalProps> = ({
             playSoundEffect('accept');
             onClose();
           }}
-          className="w-full py-3 rounded-full bg-stone-900 text-white font-bold text-xs hover:bg-stone-800 transition-colors"
+          className="w-full py-3.5 rounded-full bg-stone-900 text-white font-bold text-xs hover:bg-stone-800 transition-colors"
         >
           Save & Close
         </button>
+
+        {/* Reset App / Rerun Onboarding */}
+        <div className="pt-1 text-center">
+          <button
+            onClick={() => {
+              if (window.confirm('Reset app and replay first-time launch onboarding?')) {
+                playSoundEffect('tap');
+                onResetApp();
+              }
+            }}
+            className="text-[11px] text-stone-400 hover:text-stone-700 flex items-center justify-center gap-1 mx-auto transition-colors"
+          >
+            <RotateCcw className="w-3 h-3 stroke-[1.8]" />
+            <span>Reset App & Replay Onboarding</span>
+          </button>
+        </div>
       </div>
     </div>
   );

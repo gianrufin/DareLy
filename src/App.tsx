@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import confetti from 'canvas-confetti';
-import { Bell, CheckCircle2 } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import { Dare, SpouseVibe, CompletedDareMemory, UserPreferences } from './types';
 import { SPOUSE_DARES } from './data/presetDares';
 import { getDailyThreeSparks, getTimeUntilMidnight } from './utils/dailyDeck';
@@ -8,23 +8,29 @@ import { MinimalCardCarousel } from './components/MinimalCardCarousel';
 import { FilterPills } from './components/FilterPills';
 import { BottomNavBar, TabType } from './components/BottomNavBar';
 import { JournalModal, AiGeneratorModal, StreakProfileModal } from './components/MinimalModals';
+import { OnboardingFlow } from './components/OnboardingFlow';
 
 const STORAGE_KEYS = {
-  PREFERENCES: 'darely_minimal_prefs_v3',
-  MEMORIES: 'darely_minimal_memories_v3',
-  CUSTOM_DARES: 'darely_minimal_custom_dares_v3',
-  STREAK: 'darely_minimal_streak_v3',
-  SELECTED_VIBE: 'darely_minimal_vibe_v3',
-  TODAY_COMPLETED_IDS: 'darely_today_completed_ids_v3',
+  PREFERENCES: 'darely_minimal_prefs_v4',
+  MEMORIES: 'darely_minimal_memories_v4',
+  CUSTOM_DARES: 'darely_minimal_custom_dares_v4',
+  STREAK: 'darely_minimal_streak_v4',
+  SELECTED_VIBE: 'darely_minimal_vibe_v4',
+  TODAY_COMPLETED_IDS: 'darely_today_completed_ids_v4',
 };
 
 const DEFAULT_PREFERENCES: UserPreferences = {
+  userName: '',
+  spouseName: '',
+  relationshipDuration: '1–5 years',
+  primaryDesire: 'Romantic Touch & Closeness',
+  notificationTime: 'Evening',
   voice: 'Kore',
-  spouseName: 'Spouse',
+  isOnboarded: false, // Starts in onboarding for official first-time launch
 };
 
 export default function App() {
-  // 1. Preferences
+  // 1. Preferences & Onboarding State
   const [preferences, setPreferences] = useState<UserPreferences>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.PREFERENCES);
@@ -73,9 +79,9 @@ export default function App() {
       const saved = localStorage.getItem(STORAGE_KEYS.STREAK);
       return saved
         ? JSON.parse(saved)
-        : { currentStreak: 3, bestStreak: 7, lastCompletedDate: null };
+        : { currentStreak: 1, bestStreak: 1, lastCompletedDate: null };
     } catch {
-      return { currentStreak: 3, bestStreak: 7, lastCompletedDate: null };
+      return { currentStreak: 1, bestStreak: 1, lastCompletedDate: null };
     }
   });
 
@@ -277,75 +283,105 @@ export default function App() {
     setActiveTab('cards');
   };
 
+  const handleResetApp = () => {
+    localStorage.removeItem(STORAGE_KEYS.PREFERENCES);
+    localStorage.removeItem(STORAGE_KEYS.MEMORIES);
+    localStorage.removeItem(STORAGE_KEYS.CUSTOM_DARES);
+    localStorage.removeItem(STORAGE_KEYS.STREAK);
+    localStorage.removeItem(STORAGE_KEYS.TODAY_COMPLETED_IDS);
+    setPreferences(DEFAULT_PREFERENCES);
+    setMemories([]);
+    setCustomDares([]);
+    setStreakData({ currentStreak: 1, bestStreak: 1, lastCompletedDate: null });
+    setCompletedTodayRecord({ date: todayDateKey, ids: [] });
+    setSelectedVibe('today');
+    setCurrentIndex(0);
+    setShowStreakModal(false);
+  };
+
   return (
     <main className="min-h-[100dvh] w-full bg-[#f4f0e8] flex items-center justify-center p-3 sm:p-6 font-sans text-stone-900 selection:bg-stone-900 selection:text-white">
-      {/* Mobile Shell Frame (Exact match to reference video) */}
-      <div
-        id="darely-app-container"
-        className="w-full max-w-[390px] min-h-[720px] bg-[#fbf9f5] rounded-[44px] shadow-2xl p-6 flex flex-col justify-between relative border border-stone-200/60 overflow-hidden"
-      >
-        {/* Top Section */}
-        <div className="space-y-4">
-          {/* Header Row */}
-          <div className="flex items-center justify-between pt-1">
-            <div>
-              <h1 className="text-2xl font-black text-stone-900 tracking-tight">
-                DareLy
-              </h1>
-              <p className="text-[11px] text-stone-400 font-medium -mt-0.5">
-                3 Daily Sparks for Spouses
-              </p>
+      {!preferences.isOnboarded ? (
+        /* --- FIRST TIME LAUNCH: ONBOARDING FLOW --- */
+        <OnboardingFlow
+          initialPrefs={preferences}
+          onComplete={(newPrefs) => {
+            setPreferences(newPrefs);
+            setSelectedVibe('today');
+            setCurrentIndex(0);
+          }}
+        />
+      ) : (
+        /* --- MAIN APP INTERFACE (Matches uploaded reference video) --- */
+        <div
+          id="darely-app-container"
+          className="w-full max-w-[390px] min-h-[720px] bg-[#fbf9f5] rounded-[44px] shadow-2xl p-6 flex flex-col justify-between relative border border-stone-200/60 overflow-hidden"
+        >
+          {/* Top Section */}
+          <div className="space-y-4">
+            {/* Header Row */}
+            <div className="flex items-center justify-between pt-1">
+              <div>
+                <h1 className="text-2xl font-black text-stone-900 tracking-tight">
+                  DareLy
+                </h1>
+                <p className="text-[11px] text-stone-400 font-medium -mt-0.5">
+                  {preferences.userName && preferences.spouseName
+                    ? `${preferences.userName} & ${preferences.spouseName}`
+                    : '3 Daily Sparks for Spouses'}
+                </p>
+              </div>
+
+              {/* Notification / Profile Button with line icon */}
+              <button
+                onClick={() => setShowStreakModal(true)}
+                className="relative p-2 rounded-full hover:bg-stone-100 transition-colors"
+                title="Settings & Spouse Profile"
+              >
+                <div className="w-8 h-8 rounded-full bg-stone-900 text-white flex items-center justify-center shadow-sm">
+                  <Bell className="w-4 h-4 stroke-[2]" />
+                </div>
+                <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-rose-500 border-2 border-[#fbf9f5]" />
+              </button>
             </div>
 
-            {/* Notification / Profile Button with line icon */}
-            <button
-              onClick={() => setShowStreakModal(true)}
-              className="relative p-2 rounded-full hover:bg-stone-100 transition-colors"
-              title="Settings & Streak"
-            >
-              <div className="w-8 h-8 rounded-full bg-stone-900 text-white flex items-center justify-center shadow-sm">
-                <Bell className="w-4 h-4 stroke-[2]" />
-              </div>
-              <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-rose-500 border-2 border-[#fbf9f5]" />
-            </button>
+            {/* Filter Pills Row with "Today's 3" */}
+            <FilterPills
+              selectedVibe={selectedVibe}
+              onSelectVibe={(vibe) => {
+                setSelectedVibe(vibe);
+                setCurrentIndex(0);
+              }}
+              counts={categoryCounts}
+              dailyCompletedCount={dailyCompletedCount}
+            />
           </div>
 
-          {/* Filter Pills Row with "Today's 3" */}
-          <FilterPills
-            selectedVibe={selectedVibe}
-            onSelectVibe={(vibe) => {
-              setSelectedVibe(vibe);
-              setCurrentIndex(0);
-            }}
-            counts={categoryCounts}
-            dailyCompletedCount={dailyCompletedCount}
-          />
-        </div>
+          {/* Center Card Carousel */}
+          <div className="my-auto py-2">
+            <MinimalCardCarousel
+              dares={activeDaresList}
+              currentIndex={currentIndex}
+              onIndexChange={setCurrentIndex}
+              onComplete={handleComplete}
+              completedDareIdsToday={completedDareIdsToday}
+              spouseName={preferences.spouseName}
+              isTodayMode={selectedVibe === 'today'}
+              timeRemainingStr={timeRemainingStr}
+            />
+          </div>
 
-        {/* Center Card Carousel */}
-        <div className="my-auto py-2">
-          <MinimalCardCarousel
-            dares={activeDaresList}
-            currentIndex={currentIndex}
-            onIndexChange={setCurrentIndex}
-            onComplete={handleComplete}
-            completedDareIdsToday={completedDareIdsToday}
-            spouseName={preferences.spouseName}
-            isTodayMode={selectedVibe === 'today'}
-            timeRemainingStr={timeRemainingStr}
-          />
+          {/* Bottom Dock Navigation */}
+          <div className="pt-2">
+            <BottomNavBar
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+              streakCount={streakData.currentStreak}
+              memoryCount={memories.length}
+            />
+          </div>
         </div>
-
-        {/* Bottom Dock Navigation */}
-        <div className="pt-2">
-          <BottomNavBar
-            activeTab={activeTab}
-            onTabChange={handleTabChange}
-            streakCount={streakData.currentStreak}
-            memoryCount={memories.length}
-          />
-        </div>
-      </div>
+      )}
 
       {/* Sparks Journal Modal */}
       <JournalModal
@@ -379,8 +415,9 @@ export default function App() {
         }}
         streakCount={streakData.currentStreak}
         bestStreak={streakData.bestStreak}
-        spouseName={preferences.spouseName}
-        onUpdateSpouseName={(name) => setPreferences((p) => ({ ...p, spouseName: name }))}
+        preferences={preferences}
+        onUpdatePreferences={(updated) => setPreferences((p) => ({ ...p, ...updated }))}
+        onResetApp={handleResetApp}
       />
     </main>
   );
